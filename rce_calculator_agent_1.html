@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCE Calculator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        
+        .input-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .section-title {
+            color: #333;
+            font-weight: 700;
+            margin-bottom: 15px;
+            margin-top: 20px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .section-title:first-child {
+            margin-top: 0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .results-section {
+            background: #f0f4ff;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #764ba2;
+        }
+        
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .result-row:last-child {
+            border-bottom: none;
+        }
+        
+        .result-label {
+            color: #555;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        
+        .result-value {
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RCE Results</h1>
+        <p class="subtitle">Your weighted RCE calculations</p>
+        
+        <div class="input-section">
+            <div class="section-title">Contract Information</div>
+            
+            <div class="form-group">
+                <label>Contract Price</label>
+                <input type="number" id="a" placeholder="0.087440" step="0.000001" value="0.087440">
+            </div>
+            
+            <div class="form-group">
+                <label>Par Price</label>
+                <input type="number" id="b" placeholder="0.074440" step="0.000001" value="0.074440">
+            </div>
+            
+            <div class="section-title">RCE Information</div>
+            
+            <div class="form-group">
+                <label>Actual RCE</label>
+                <input type="number" id="c" placeholder="2.210386" step="0.000001" value="2.210386">
+            </div>
+            
+            <div class="form-group">
+                <label>Commodity</label>
+                <select id="d">
+                    <option value="1">Electricity</option>
+                    <option value="2">Gas</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Term (Months)</label>
+                <input type="number" id="e" placeholder="60" step="1" value="60">
+            </div>
+        </div>
+        
+        <div class="results-section">
+            <div class="result-row">
+                <span class="result-label">Actual RCE</span>
+                <span class="result-value" id="r1">-</span>
+            </div>
+            
+            <div class="result-row">
+                <span class="result-label">RCE Weighted</span>
+                <span class="result-value" id="r2">-</span>
+            </div>
+            
+            <div class="result-row">
+                <span class="result-label">RCE Double Weighted</span>
+                <span class="result-value" id="r3">-</span>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        (function(){var x=function(){var p=parseFloat(document.getElementById('a').value);var q=parseFloat(document.getElementById('b').value);var r=parseFloat(document.getElementById('c').value);var s=document.getElementById('d').value;var t=parseFloat(document.getElementById('e').value);if(isNaN(p)||isNaN(q)||isNaN(r)||isNaN(t))return;var u=p-q;var v=r*(t/60);var w=s=='1'?(u>0?1+u*100:1+u*80):(u>0?1+u*10:1+u*8);var z=v*w;document.getElementById('r1').textContent=r.toFixed(6);document.getElementById('r2').textContent=v.toFixed(6);document.getElementById('r3').textContent=z.toFixed(2);};document.getElementById('a').addEventListener('input',x);document.getElementById('b').addEventListener('input',x);document.getElementById('c').addEventListener('input',x);document.getElementById('d').addEventListener('change',x);document.getElementById('e').addEventListener('input',x);x();})();
+    </script>
+</body>
+</html>
