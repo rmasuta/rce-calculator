@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RCE Results</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;user-select:none;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none}.container{background:white;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.3);padding:40px;max-width:600px;width:100%}h1{color:#333;margin-bottom:10px;font-size:28px}.subtitle{color:#666;margin-bottom:30px;font-size:14px}.input-section{background:#f8f9fa;padding:25px;border-radius:8px;margin-bottom:30px;border-left:4px solid #667eea}.section-title{color:#333;font-weight:700;margin-bottom:15px;margin-top:20px;font-size:13px;text-transform:uppercase;letter-spacing:1px}.section-title:first-child{margin-top:0}.form-group{margin-bottom:20px}.form-group:last-child{margin-bottom:0}label{display:block;color:#333;font-weight:600;margin-bottom:8px;font-size:14px}input,select{width:100%;padding:12px;border:2px solid #ddd;border-radius:6px;font-size:14px;transition:border-color 0.3s}input:focus,select:focus{outline:none;border-color:#667eea}.results-section{background:#f0f4ff;padding:25px;border-radius:8px;border-left:4px solid #764ba2}.result-row{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid #ddd}.result-row:last-child{border-bottom:none}.result-label{color:#555;font-weight:600;font-size:13px}.result-value{color:#333;font-size:18px;font-weight:bold;color:#667eea}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RCE Results</h1>
+        <p class="subtitle">Your weighted RCE calculations</p>
+        <div class="input-section">
+            <div class="section-title">Contract Information</div>
+            <div class="form-group">
+                <label>Contract Price</label>
+                <input type="number" id="i1" placeholder="0.087440" step="0.000001" value="0.087440">
+            </div>
+            <div class="form-group">
+                <label>Par Price</label>
+                <input type="number" id="i2" placeholder="0.074440" step="0.000001" value="0.074440">
+            </div>
+            <div class="section-title">RCE Information</div>
+            <div class="form-group">
+                <label>Actual RCE</label>
+                <input type="number" id="i3" placeholder="2.210386" step="0.000001" value="2.210386">
+            </div>
+            <div class="form-group">
+                <label>Commodity</label>
+                <select id="i4">
+                    <option value="1">Electricity</option>
+                    <option value="2">Gas</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Term (Months)</label>
+                <input type="number" id="i5" placeholder="60" step="1" value="60">
+            </div>
+        </div>
+        <div class="results-section">
+            <div class="result-row">
+                <span class="result-label">Actual RCE</span>
+                <span class="result-value" id="o1">-</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">RCE Weighted</span>
+                <span class="result-value" id="o2">-</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">RCE Double Weighted</span>
+                <span class="result-value" id="o3">-</span>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.oncontextmenu=function(){return false};document.onkeydown=function(e){if(e.keyCode==123||e.ctrlKey&&e.shiftKey&&(e.keyCode==73||e.keyCode==74||e.keyCode==67)||e.ctrlKey&&e.keyCode==85){return false}};(function(){function c(){var m1=parseFloat(document.getElementById('i1').value),m2=parseFloat(document.getElementById('i2').value),m3=parseFloat(document.getElementById('i3').value),m4=document.getElementById('i4').value,m5=parseFloat(document.getElementById('i5').value);if(isNaN(m1)||isNaN(m2)||isNaN(m3)||isNaN(m5))return;var m6=m1-m2,m7=m3*(m5/60),m8=m4=='1'?(m6>0?1+m6*100:1+m6*80):(m6>0?1+m6*10:1+m6*8),m9=m7*m8;document.getElementById('o1').textContent=m3.toFixed(6);document.getElementById('o2').textContent=m7.toFixed(6);document.getElementById('o3').textContent=m9.toFixed(2);}document.getElementById('i1').addEventListener('input',c);document.getElementById('i2').addEventListener('input',c);document.getElementById('i3').addEventListener('input',c);document.getElementById('i4').addEventListener('change',c);document.getElementById('i5').addEventListener('input',c);c();})();
+    </script>
+</body>
+</html>
